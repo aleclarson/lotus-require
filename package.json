@@ -1,0 +1,10 @@
+{
+  "name": "lotus-require",
+  "description": "Absolute paths for local packages in Node.",
+  "version": "1.0.0",
+  "dependencies": {
+    "escape-string-regexp": "^1.0.3",
+    "has": "^1.0.1",
+    "parse-bool": "aleclarson/parse-bool#0.0.1"
+  }
+}
