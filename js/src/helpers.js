@@ -82,6 +82,9 @@ exports.dependerCache = Object.create(null);
 
 exports.requiresLotus = function(depender, path) {
   var pkg;
+  if (lotus.forceAll) {
+    return true;
+  }
   pkg = exports.findPackage(depender.filename);
   return (pkg !== null) && (has(exports.dependerCache, pkg));
 };

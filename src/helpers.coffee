@@ -54,6 +54,7 @@ exports.findPackage = (path) ->
 exports.dependerCache = Object.create null
 
 exports.requiresLotus = (depender, path) ->
+  return yes if lotus.forceAll
   pkg = exports.findPackage depender.filename
   (pkg isnt null) and (has exports.dependerCache, pkg)
 

@@ -14,4 +14,6 @@ lotus.regex = /(^|\/)(lotus-require|lotus)(\/|$)/;
 
 lotus.isEnabled = parseBool(process.env.LOTUS) === true;
 
+lotus.forceAll = false;
+
 //# sourceMappingURL=../../map/src/lotus.map
