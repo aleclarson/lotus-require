@@ -44,7 +44,7 @@ exports.isFile = function(path) {
   }
   try {
     stats = statSync(path);
-  } catch (_error) {}
+  } catch (error) {}
   return stats != null ? stats.isFile() : void 0;
 };
 

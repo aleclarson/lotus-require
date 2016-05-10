@@ -1,10 +1,14 @@
 {
   "name": "lotus-require",
-  "description": "Absolute paths for local packages in Node.",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "dependencies": {
-    "escape-string-regexp": "^1.0.3",
-    "has": "^1.0.1",
-    "parse-bool": "aleclarson/parse-bool#0.0.1"
+    "escape-string-regexp": "aleclarson/escape-string-regexp#1.0.5",
+    "parse-bool": "aleclarson/parse-bool#0.0.1",
+    "has": "aleclarson/has#1.0.0"
+  },
+  "lotus": {
+    "plugins": [
+      "lotus-coffee"
+    ]
   }
 }

@@ -1,9 +1,9 @@
 
-# lotus-require v1.0.0 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
+# lotus-require 2.0.0 ![stable](https://img.shields.io/badge/stability-stable-4EBA0F.svg?style=flat)
 
 1. Specify a directory of your local packages.
 
-2. Remove relative paths. 
+2. Remove relative paths.
 
 When `process.env.LOTUS` is `true`, absolute paths will check your local package directory before each `node_modules` directory.
 

@@ -14,7 +14,7 @@ exports.require = (id, depender) ->
   requireModule.call mod, id
 
 exports.optional = (id, depender, onFail) ->
-  if (not has arguments, 2) and (depender instanceof Function)
+  if (arguments.length is 2) and (depender instanceof Function)
     onFail = depender
     depender = null
   try result = exports.require.call this, id, depender

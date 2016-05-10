@@ -1,17 +1,16 @@
 
-var lotus = global.LOTUS_REQUIRE;
+var LOTUS_REQUIRE, lotus;
 
-var helpers = require('./js/src/helpers');
+LOTUS_REQUIRE = Symbol.for('lotus-require');
+lotus = global[LOTUS_REQUIRE];
 
 if (lotus) {
-  helpers.cacheTrueDepender(module.parent, module.filename);
+  lotus._helpers.cacheTrueDepender(module.parent, module.filename);
 } else {
   lotus = require('./js/src/index');
-  lotus.parent = helpers.cacheTrueDepender(module.parent, module.filename);
-  lotus.dependers = helpers.dependerCache;
-  Object.defineProperty(global, 'LOTUS_REQUIRE', {
-    get: function() { return lotus }
-  });
+  lotus.parent = lotus._helpers.cacheTrueDepender(module.parent, module.filename);
+  lotus.dependers = lotus._helpers.dependerCache;
+  global[LOTUS_REQUIRE] = lotus;
 }
 
 module.exports = lotus;
