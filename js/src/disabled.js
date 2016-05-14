@@ -23,14 +23,14 @@ exports.require = function(id, depender) {
 
 exports.optional = function(id, depender, onFail) {
   var error, regex, result;
-  if ((!has(arguments, 2)) && (depender instanceof Function)) {
+  if ((arguments.length === 2) && (depender instanceof Function)) {
     onFail = depender;
     depender = null;
   }
   try {
     result = exports.require.call(this, id, depender);
-  } catch (_error) {
-    error = _error;
+  } catch (error1) {
+    error = error1;
     regex = RegExp("Cannot find module '" + (escapeStringRegexp(id)) + "'");
     if (regex.test(error.message)) {
       if (typeof onFail === "function") {
@@ -70,8 +70,8 @@ exports.resolve = function(id, depender) {
   }
   try {
     path = Module._resolveFilename(id, dependerModule);
-  } catch (_error) {
-    error = _error;
+  } catch (error1) {
+    error = error1;
     path = null;
   }
   return path;
