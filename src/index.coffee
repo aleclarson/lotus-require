@@ -1,27 +1,16 @@
 
 Path = require "path"
 
+Module = require "./Module"
 lotus = require "./lotus"
 
-methods =
-  if lotus.isEnabled then require "./enabled"
-  else require "./disabled"
+lotus.isLoaded = Module.isLoaded
+lotus.isFile = Module.isFile
+lotus.resolve = Module.resolve
 
-lotus.exists = (id, depender) ->
-  methods.exists id, depender
-
-lotus.resolve = (id, depender) ->
-  methods.resolve id, depender
-
-lotus.relative = (id, depender) ->
-  Path.relative lotus.path, methods.resolve id, depender
-
-Object.defineProperties lotus,
-  _methods: { value: methods }
-  _helpers: { value: require "./helpers" }
-
-Module = require "module"
-for key in Object.keys methods
-  Module.prototype[key] = methods[key]
+lotus.relative = (path, parentPath) ->
+  path = Module.resolve path, parentPath
+  return null if not path
+  Path.relative lotus.path, path
 
 module.exports = lotus

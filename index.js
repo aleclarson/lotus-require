@@ -1,16 +1,9 @@
 
-var LOTUS_REQUIRE, lotus;
+var LOTUS = Symbol.for('lotus');
+var lotus = global[LOTUS];
 
-LOTUS_REQUIRE = Symbol.for('lotus-require');
-lotus = global[LOTUS_REQUIRE];
-
-if (lotus) {
-  lotus._helpers.cacheTrueDepender(module.parent, module.filename);
-} else {
-  lotus = require('./js/src/index');
-  lotus.parent = lotus._helpers.cacheTrueDepender(module.parent, module.filename);
-  lotus.dependers = lotus._helpers.dependerCache;
-  global[LOTUS_REQUIRE] = lotus;
+if (!lotus) {
+  global[LOTUS] = lotus = require('./js/src/index');
 }
 
 module.exports = lotus;

@@ -1,0 +1,87 @@
+
+Module = require "module"
+Path = require "path"
+FS = require "fs"
+
+lotus = require "./lotus"
+
+module.exports = Module
+
+# Has this module path been imported?
+Module.isLoaded = (path, parentPath) ->
+  path = Module.resolve path, parentPath
+  return yes if path and Module._cache[path]
+  return no
+
+# Does a module exist at this path?
+Module.isFile = (path, parentPath) ->
+  path = Module.resolve path, parentPath
+  return path isnt null
+
+# Returns the absolute path for a dependency.
+# Returns null if the path cannot be resolved.
+Module.resolve = (path, parentPath) ->
+
+  if path[0] is "."
+
+    if not Module._isFile parentPath
+      throw Error "'parentPath' must be a file: '#{parentPath}'"
+
+    path = Path.resolve Path.dirname(parentPath), path
+
+  else if path[0] isnt "/"
+    mod = Module._getLotusPath path, parentPath
+    return mod if mod
+
+  return Module._getModulePath path, parentPath
+
+#
+# Helpers
+#
+
+moduleCache = Object.create null
+
+internalStatics =
+
+  isFile: (path) ->
+
+    if typeof path isnt "string"
+      throw TypeError "'path' must be a string!"
+
+    if not Path.isAbsolute path
+      throw Error "'path' must be absolute: '#{path}'"
+
+    try stats = FS.statSync path
+    stats and stats.isFile()
+
+  getModulePath: (path, parentPath) ->
+    parent = Module._getModule parentPath if parentPath
+    try return Module._resolveFilename path, parent
+    catch error then return null
+
+  getLotusPath: (path, parentPath) ->
+    return if parentPath and lotus._isExcluded parentPath
+    path = Path.resolve lotus.path, path
+    return Module._getModulePath path, parentPath
+
+  getModule: (path) ->
+
+    if not Path.isAbsolute path
+      throw Error "'path' must be absolute: '#{path}'"
+
+    mod = Module._cache[path]
+    if mod
+      delete moduleCache[path]
+      return mod
+
+    mod = moduleCache[path]
+    return mod if mod
+
+    mod = new Module path
+    mod.filename = path
+    mod.paths = Module._nodeModulePaths Path.dirname path
+    return moduleCache[path] = mod
+
+define = Object.defineProperty
+for key, value of internalStatics
+  define Module, "_" + key, { value }
