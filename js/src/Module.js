@@ -27,7 +27,7 @@ Module.resolve = function(path, parentPath) {
   var mod;
   if (path[0] === ".") {
     if (!Module._isFile(parentPath)) {
-      throw Error("'parentPath' must be a file: '" + parentPath + "'");
+      return null;
     }
     path = Path.resolve(Path.dirname(parentPath), path);
   } else if (path[0] !== "/") {

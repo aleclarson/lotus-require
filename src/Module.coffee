@@ -23,10 +23,7 @@ Module.isFile = (path, parentPath) ->
 Module.resolve = (path, parentPath) ->
 
   if path[0] is "."
-
-    if not Module._isFile parentPath
-      throw Error "'parentPath' must be a file: '#{parentPath}'"
-
+    return null if not Module._isFile parentPath
     path = Path.resolve Path.dirname(parentPath), path
 
   else if path[0] isnt "/"
