@@ -10,8 +10,8 @@ lotus =
     Module = require "./Module"
     loadModule = Module::require
     Module::require = (path) ->
-      path = Module.resolve path, @filename
-      loadModule.call this, path
+      resolved = Module.resolve path, @filename
+      loadModule.call this, resolved or path
 
     if config.exclude
       lotus._exclude config.exclude

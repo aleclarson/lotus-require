@@ -9,8 +9,9 @@ lotus = {
     Module = require("./Module");
     loadModule = Module.prototype.require;
     Module.prototype.require = function(path) {
-      path = Module.resolve(path, this.filename);
-      return loadModule.call(this, path);
+      var resolved;
+      resolved = Module.resolve(path, this.filename);
+      return loadModule.call(this, resolved || path);
     };
     if (config.exclude) {
       lotus._exclude(config.exclude);
