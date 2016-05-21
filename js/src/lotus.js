@@ -6,6 +6,9 @@ lotus = {
   path: process.env.LOTUS_PATH || null,
   register: function(config) {
     var Module, loadModule;
+    if (config == null) {
+      config = {};
+    }
     Module = require("./Module");
     loadModule = Module.prototype.require;
     Module.prototype.require = function(path) {

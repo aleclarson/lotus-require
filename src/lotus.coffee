@@ -5,7 +5,7 @@ lotus =
 
   path: process.env.LOTUS_PATH or null
 
-  register: (config) ->
+  register: (config = {}) ->
 
     Module = require "./Module"
     loadModule = Module::require
