@@ -12,6 +12,8 @@ lotus.isFile = Module.isFile;
 
 lotus.resolve = Module.resolve;
 
+lotus.toAbsolute = Module._getLotusPath;
+
 lotus.relative = function(path, parentPath) {
   path = Module.resolve(path, parentPath);
   if (!path) {

@@ -7,6 +7,7 @@ lotus = require "./lotus"
 lotus.isLoaded = Module.isLoaded
 lotus.isFile = Module.isFile
 lotus.resolve = Module.resolve
+lotus.toAbsolute = Module._getLotusPath
 
 lotus.relative = (path, parentPath) ->
   path = Module.resolve path, parentPath

@@ -38,47 +38,44 @@ Module.resolve = (path, parentPath) ->
 
 moduleCache = Object.create null
 
-internalStatics =
+internalDefine = (key, value) ->
+  Object.defineProperty Module, key, { value }
 
-  isFile: (path) ->
+internalDefine "_isFile", (path) ->
 
-    if typeof path isnt "string"
-      throw TypeError "'path' must be a string!"
+  if typeof path isnt "string"
+    throw TypeError "'path' must be a string!"
 
-    if not Path.isAbsolute path
-      throw Error "'path' must be absolute: '#{path}'"
+  if not Path.isAbsolute path
+    throw Error "'path' must be absolute: '#{path}'"
 
-    try stats = FS.statSync path
-    stats and stats.isFile()
+  try stats = FS.statSync path
+  return stats and stats.isFile()
 
-  getModulePath: (path, parentPath) ->
-    parent = Module._getModule parentPath if parentPath
-    try return Module._resolveFilename path, parent
-    catch error then return null
+internalDefine "_getModulePath", (path, parentPath) ->
+  parent = Module._getModule parentPath if parentPath
+  try return Module._resolveFilename path, parent
+  catch error then return null
 
-  getLotusPath: (path, parentPath) ->
-    return if parentPath and lotus._isExcluded parentPath
-    path = Path.resolve lotus.path, path
-    return Module._getModulePath path, parentPath
+internalDefine "_getLotusPath", (path, parentPath) ->
+  return if parentPath and lotus._isExcluded parentPath
+  path = Path.resolve lotus.path, path
+  return Module._getModulePath path, parentPath
 
-  getModule: (path) ->
+internalDefine "_getModule", (path) ->
 
-    if not Path.isAbsolute path
-      throw Error "'path' must be absolute: '#{path}'"
+  if not Path.isAbsolute path
+    throw Error "'path' must be absolute: '#{path}'"
 
-    mod = Module._cache[path]
-    if mod
-      delete moduleCache[path]
-      return mod
+  mod = Module._cache[path]
+  if mod
+    delete moduleCache[path]
+    return mod
 
-    mod = moduleCache[path]
-    return mod if mod
+  mod = moduleCache[path]
+  return mod if mod
 
-    mod = new Module path
-    mod.filename = path
-    mod.paths = Module._nodeModulePaths Path.dirname path
-    return moduleCache[path] = mod
-
-define = Object.defineProperty
-for key, value of internalStatics
-  define Module, "_" + key, { value }
+  mod = new Module path
+  mod.filename = path
+  mod.paths = Module._nodeModulePaths Path.dirname path
+  return moduleCache[path] = mod
