@@ -15,8 +15,10 @@ lotus.resolve = Module.resolve;
 lotus.toAbsolute = Module._getLotusPath;
 
 lotus.relative = function(path, parentPath) {
-  path = Module.resolve(path, parentPath);
-  if (!path) {
+  if (arguments.length > 1) {
+    path = Module.resolve(path, parentPath);
+  }
+  if (typeof path !== "string") {
     return null;
   }
   return Path.relative(lotus.path, path);
