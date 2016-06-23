@@ -1,11 +1,6 @@
 {
   "name": "lotus-require",
-  "version": "2.0.0",
-  "dependencies": {
-    "escape-string-regexp": "aleclarson/escape-string-regexp#1.0.5",
-    "has": "aleclarson/has#1.0.0",
-    "parse-bool": "aleclarson/parse-bool#0.0.1"
-  },
+  "version": "3.0.0",
   "lotus": {
     "plugins": [
       "lotus-coffee"
@@ -13,6 +8,7 @@
     "implicitDependencies": [
       "fs",
       "module",
+      "os",
       "path"
     ]
   }

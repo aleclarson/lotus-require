@@ -1,63 +1,24 @@
 
-# lotus-require 2.0.0 ![stable](https://img.shields.io/badge/stability-stable-4EBA0F.svg?style=flat)
+# lotus-require 3.0.0 ![stable](https://img.shields.io/badge/stability-stable-4EBA0F.svg?style=flat)
 
-1. Specify a directory of your local packages.
+```coffee
+lotus = require "lotus-require"
 
-2. Remove relative paths.
+lotus.path is process.env.LOTUS_PATH # => true
 
-When `process.env.LOTUS` is `true`, absolute paths will check your local package directory before each `node_modules` directory.
+# Overrides 'Module.prototype.require'!
+lotus.register
+  exclude: [ ".*\\/node_modules\\/.*" ]
 
-usage
------
+# Returns true if the module path has been imported.
+lotus.isLoaded path, parentPath
 
-If you're on OSX, go into your `~/.bashrc` and paste these lines.
+# Returns true if the module path is valid.
+lotus.isFile path, parentPath
 
-```sh
-export LOTUS="true"
-export LOTUS_PATH="$HOME/dev/modules"
-```
+# Returns the absolute path of the resolved dependency.
+lotus.resolve path, parentPath
 
-If `LOTUS` isn't equal to `true`, everything goes back to working normally.
-
-The `LOTUS_PATH` must be defined for this library to work.
-
-Now, wherever you want to use local packages during development, just import this library!
-
-```JavaScript
-require("lotus-require")
-```
-
-Once required, this library will maintain a subset of `Module.prototype` that includes `require`, `optional`, `exists`, and `cached`.
-
-```JavaScript
-// Check "$LOTUS_PATH/my-local-package" before every "node_modules" directory.
-var pkg = module.require("my-local-package")
-
-// Don't throw an Error if the package doesn't exist. But still throw an Error if something else goes wrong.
-var pkgOrNull = module.optional("my-local-package")
-
-// Can this package be loaded?
-var isLoadable = module.exists("my-local-package")
-
-// Is the package already loaded?
-var isLoaded = module.cached("my-local-package")
-```
-
-Feel free to use `require` instead of `module.require`.
-
-```JavaScript
-var pkg = require("my-local-package")
-```
-
-And that's all there is to it!
-
-&nbsp;
-
-install
--------
-
-Be sure you don't want the [`lotus`](https://github.com/aleclarson/lotus) library before you install this package.
-
-```sh
-npm install --save aleclarson/lotus-require#1.0.0
+# Returns the resolved path, but relative to 'lotus.path'!
+lotus.relative path, parentPath
 ```

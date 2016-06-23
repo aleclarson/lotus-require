@@ -1,15 +1,36 @@
 
-parseBool = require "parse-bool"
+excludedPatterns = []
 
-lotus = exports
+lotus =
 
-lotus.path = process.env.LOTUS_PATH
+  path: process.env.LOTUS_PATH or null
 
-throw Error "Missing '$LOTUS_PATH' environment variable" unless lotus.path?
+  register: (config = {}) ->
 
-lotus.regex = /(^|\/)(lotus-require|lotus)(\/|$)/
+    Module = require "./Module"
+    loadModule = Module::require
+    Module::require = (path) ->
+      resolved = Module.resolve path, @filename
+      loadModule.call this, resolved or path
 
-lotus.isEnabled = parseBool(process.env.LOTUS) is yes
+    if config.exclude
+      lotus._exclude config.exclude
+    return
 
-# Set this to `yes` if you want `lotus-require` enabled for every module (even ones that don't import `lotus-require`).
-lotus.forceAll = no
+  _exclude: (excluded) ->
+    return if not Array.isArray excluded
+    for regex in excluded
+      regex = RegExp regex if typeof regex is "string"
+      continue if not regex instanceof RegExp
+      excludedPatterns.push regex
+    return
+
+  _isExcluded: (path) ->
+    if excludedPatterns.length
+      for regex in excludedPatterns
+        return yes if regex.test path
+    return no
+
+define = Object.defineProperty
+for key, value of lotus
+  define exports, key, { value, enumerable: key[0] isnt "_" }

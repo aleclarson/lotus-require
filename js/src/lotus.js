@@ -1,19 +1,63 @@
-var lotus, parseBool;
+var define, excludedPatterns, key, lotus, value;
 
-parseBool = require("parse-bool");
+excludedPatterns = [];
 
-lotus = exports;
+lotus = {
+  path: process.env.LOTUS_PATH || null,
+  register: function(config) {
+    var Module, loadModule;
+    if (config == null) {
+      config = {};
+    }
+    Module = require("./Module");
+    loadModule = Module.prototype.require;
+    Module.prototype.require = function(path) {
+      var resolved;
+      resolved = Module.resolve(path, this.filename);
+      return loadModule.call(this, resolved || path);
+    };
+    if (config.exclude) {
+      lotus._exclude(config.exclude);
+    }
+  },
+  _exclude: function(excluded) {
+    var i, len, regex;
+    if (!Array.isArray(excluded)) {
+      return;
+    }
+    for (i = 0, len = excluded.length; i < len; i++) {
+      regex = excluded[i];
+      if (typeof regex === "string") {
+        regex = RegExp(regex);
+      }
+      if (!regex instanceof RegExp) {
+        continue;
+      }
+      excludedPatterns.push(regex);
+    }
+  },
+  _isExcluded: function(path) {
+    var i, len, regex;
+    if (excludedPatterns.length) {
+      for (i = 0, len = excludedPatterns.length; i < len; i++) {
+        regex = excludedPatterns[i];
+        if (regex.test(path)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+};
 
-lotus.path = process.env.LOTUS_PATH;
+define = Object.defineProperty;
 
-if (lotus.path == null) {
-  throw Error("Missing '$LOTUS_PATH' environment variable");
+for (key in lotus) {
+  value = lotus[key];
+  define(exports, key, {
+    value: value,
+    enumerable: key[0] !== "_"
+  });
 }
-
-lotus.regex = /(^|\/)(lotus-require|lotus)(\/|$)/;
-
-lotus.isEnabled = parseBool(process.env.LOTUS) === true;
-
-lotus.forceAll = false;
 
 //# sourceMappingURL=../../map/src/lotus.map

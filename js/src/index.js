@@ -1,39 +1,28 @@
-var Module, Path, i, key, len, lotus, methods, ref;
+var Module, Path, lotus;
 
 Path = require("path");
 
+Module = require("./Module");
+
 lotus = require("./lotus");
 
-methods = lotus.isEnabled ? require("./enabled") : require("./disabled");
+lotus.isLoaded = Module.isLoaded;
 
-lotus.exists = function(id, depender) {
-  return methods.exists(id, depender);
-};
+lotus.isFile = Module.isFile;
 
-lotus.resolve = function(id, depender) {
-  return methods.resolve(id, depender);
-};
+lotus.resolve = Module.resolve;
 
-lotus.relative = function(id, depender) {
-  return Path.relative(lotus.path, methods.resolve(id, depender));
-};
+lotus.toAbsolute = Module._getLotusPath;
 
-Object.defineProperties(lotus, {
-  _methods: {
-    value: methods
-  },
-  _helpers: {
-    value: require("./helpers")
+lotus.relative = function(path, parentPath) {
+  if (arguments.length > 1) {
+    path = Module.resolve(path, parentPath);
   }
-});
-
-Module = require("module");
-
-ref = Object.keys(methods);
-for (i = 0, len = ref.length; i < len; i++) {
-  key = ref[i];
-  Module.prototype[key] = methods[key];
-}
+  if (typeof path !== "string") {
+    return null;
+  }
+  return Path.relative(lotus.path, path);
+};
 
 module.exports = lotus;
 
