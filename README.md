@@ -1,5 +1,5 @@
 
-# lotus-require 3.0.0 ![stable](https://img.shields.io/badge/stability-stable-4EBA0F.svg?style=flat)
+# lotus-require v3.1.0 ![stable](https://img.shields.io/badge/stability-stable-4EBA0F.svg?style=flat)
 
 ```coffee
 lotus = require "lotus-require"

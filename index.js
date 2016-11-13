@@ -18,7 +18,7 @@ if (!lotus) {
 
   // Default to using the installed remote version.
   if (!lotus) {
-    lotus = require('./js/src/index');
+    lotus = require('./js/index');
   }
 
   global[LOTUS] = lotus;
