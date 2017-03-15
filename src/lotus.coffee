@@ -18,10 +18,10 @@ lotus =
     return
 
   _exclude: (excluded) ->
-    return if not Array.isArray excluded
+    return unless Array.isArray excluded
     for regex in excluded
       regex = RegExp regex if typeof regex is "string"
-      continue if not regex instanceof RegExp
+      continue unless regex instanceof RegExp
       excludedPatterns.push regex
     return
 
