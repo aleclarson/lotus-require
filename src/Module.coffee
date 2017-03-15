@@ -26,7 +26,7 @@ Module.resolve = (path, parentPath) ->
     return null if not Module._isFile parentPath
     path = Path.resolve Path.dirname(parentPath), path
 
-  else if path[0] isnt "/"
+  else if path[0] isnt Path.sep
     mod = Module._getLotusPath path, parentPath
     return mod if mod
 
