@@ -1,7 +1,7 @@
 
 Module = require "module"
 Path = require "path"
-FS = require "fs"
+fs = require "fs"
 
 lotus = require "./lotus"
 
@@ -23,10 +23,10 @@ Module.isFile = (path, parentPath) ->
 Module.resolve = (path, parentPath) ->
 
   if path[0] is "."
-    return null if not Module._isFile parentPath
+    return null unless Module._isFile parentPath
     path = Path.resolve Path.dirname(parentPath), path
 
-  else if path[0] isnt "/"
+  else if path[0] isnt Path.sep
     mod = Module._getLotusPath path, parentPath
     return mod if mod
 
@@ -46,10 +46,10 @@ internalDefine "_isFile", (path) ->
   if typeof path isnt "string"
     throw TypeError "'path' must be a string!"
 
-  if not Path.isAbsolute path
+  unless Path.isAbsolute path
     throw Error "'path' must be absolute: '#{path}'"
 
-  try stats = FS.statSync path
+  try stats = fs.statSync path
   return stats and stats.isFile()
 
 internalDefine "_getModulePath", (path, parentPath) ->
@@ -64,7 +64,7 @@ internalDefine "_getLotusPath", (path, parentPath) ->
 
 internalDefine "_getModule", (path) ->
 
-  if not Path.isAbsolute path
+  unless Path.isAbsolute path
     throw Error "'path' must be absolute: '#{path}'"
 
   mod = Module._cache[path]
